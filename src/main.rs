@@ -67,9 +67,9 @@ fn read_file(file_name: &str, rows: usize, cols: usize) -> Option<Vec<Vec<u8>>> 
     }
 }
 
-fn print_matrix_in_hex(matrix: &Vec<Vec<u8>>) {
+fn print_matrix_in_hex(matrix: &Vec<Vec<u8>>,iy:usize) {
     // Выводим матрицу в 16-ричной системе исчисления
-    println!("Матрица 1 (16-ричная):");
+    println!("Матрица {} (16-ричная):", iy);
     for row in matrix {
         for &byte in row.iter() {
             print!("{:X} ", byte);
@@ -78,9 +78,11 @@ fn print_matrix_in_hex(matrix: &Vec<Vec<u8>>) {
     }
 }
 
-fn print_matrix_in_binary(matrix: &Vec<Vec<u8>>) {
+fn print_matrix_in_binary(matrix: &Vec<Vec<u8>>,iy:usize) {
+    
+   
     // Выводим матрицу в двоичной системе исчисления
-    println!("Матрица 1 (2-ичная):");
+    println!("Матрица {} (2-ичная):", iy);
     for row in matrix {
         for &byte in row.iter() {
             print!("{:04b} ", byte);
@@ -88,7 +90,8 @@ fn print_matrix_in_binary(matrix: &Vec<Vec<u8>>) {
         println!(); // Переход на новую строку
     }
 }
-fn klyuch() {
+
+/*fn klyuch() {
     // Verilen değerleri içeren vektörü oluştur
     let values: Vec<&str> = vec![
         "ED3E868D", "3EF0AB79", "C68B0175", "CEACE980",
@@ -121,12 +124,13 @@ fn klyuch() {
             print!("{:X} ", nybble);
         }
         println!();
-    }    let values: Vec<&str> = vec![
+    }
+    let values: Vec<&str> = vec![
         "ED3E868D", "3EF0AB79", "C68B0175", "CEACE980",
         "E2CF119F", "277D712A", "F99E33A7", "9DCA77FA",
         "39B9F8F4", "8AFF1045", "D23BBE59", "E4CF5748",
         "3878AAEB", "6D4E2812", "FB7D36A8", "7E43433E"
-    ];/* */
+    ];
 
     // Vektörü matrise dönüştür
     let rows = values.len();
@@ -144,26 +148,88 @@ fn klyuch() {
             .collect();
         matrix.push(row_values);
     }
-    print_matrix_in_binary(&matrix);
-}
+    print_matrix_in_binary(&matrix, iy);
+}*/
 
+// Новая функция, которая принимает три матрицы и выводит их в двоичной системе исчисления
+fn process_matrices(matrix1: &Vec<Vec<u8>>, matrix2: &Vec<Vec<u8>>, matrix3: &Vec<Vec<u8>>) {
+    // Проход по всем трем матрицам
+    for (i, row) in matrix1.iter().enumerate() {
+        // Вывод элемента строки
+        for &element in row {
+          
+        }
+        
+        // Переход на новую строку после каждой строки матрицы1
+     
+    }
+}
 
 fn main() {
-    let rows = 16; // Örnek olarak 8 satır
-    let cols = 8; // Örnek olarak 8 sütun
+    let rows = 16;
+    let cols = 8;
+let iy=1;
+    // Чтение первого файла и создание матрицы
+    if let Some(matrix1) = read_file("D:/git/la2_hadzhyew/src/gen.bin", rows, cols) {
+        // Вывод матрицы1 в 16-ричной и 2-ичной системе исчисления
+        
+        print_matrix_in_hex(&matrix1,iy);
+        print_matrix_in_binary(&matrix1,iy);
+ 
+    // Получаем количество строк и столбцов исходной матрицы
+    let num_rows = matrix1.len();
+    let num_cols = matrix1[0].len();
+    let transposed_matrix: Vec<Vec<u8>> = (0..num_cols)
+        .map(|col_index| {
+            (0..num_rows)
+                .map(|row_index| matrix1[row_index][col_index])
+                .collect()
+        })
+        .collect();
 
-    // Dosyadan okuma işlemini gerçekleştir
-    if let Some(matrix1) = read_file("C:/Users/begah/OneDrive/Masaüstü/rust_project/la2_hadzhyew/src/gen.bin", rows, cols) {
-        // 16-rih ve 2-ich matrisleri yazdır
-        print_matrix_in_hex(&matrix1);
-        print_matrix_in_binary(&matrix1);
+    // Выводим результат
+    for row in transposed_matrix.clone() {
+        for &element in row.iter() {
+            print!("{:04b}", element);
+        }
+        println!();
     }
+     //..
+        let iy=2;
+        // Чтение второго файла и создание матрицы
+        if let Some(matrix2) = read_file("D:/git/la2_hadzhyew/src/gen321.bin", 8, cols) {
+            print_matrix_in_hex(&matrix2,iy);
+            print_matrix_in_binary(&matrix2,iy);
+            // Создание третьей матрицы (вызов функции klyuch)
+            let values: Vec<&str> = vec![
+                "ED3E868D", "3EF0AB79", "C68B0175", "CEACE980",
+                "E2CF119F", "277D712A", "F99E33A7", "9DCA77FA",
+                "39B9F8F4", "8AFF1045", "D23BBE59", "E4CF5748",
+                "3878AAEB", "6D4E2812", "FB7D36A8", "7E43433E"
+            ];
+            let rows = values.len();
+            let cols = values[0].len() / 2;
+            let mut matrix3: Vec<Vec<u8>> = Vec::with_capacity(rows);
+            for row in values.iter() {
+                let row_values: Vec<u8> = row.chars().collect::<Vec<char>>().chunks(2)
+                    .flat_map(|hex_pair| {
+                        let hex_str: String = hex_pair.into_iter().collect();
+                        let hex_value = u8::from_str_radix(&hex_str, 16).expect("Invalid hexadecimal value");
+                        vec![(hex_value >> 4) & 0xF, hex_value & 0xF]
+                    })
+                    .collect();
+                matrix3.push(row_values);
+            }
 
-    // İkinci dosyadan okuma işlemini gerçekleştir
-    if let Some(matrix2) = read_file("C:/Users/begah/OneDrive/Masaüstü/rust_project/la2_hadzhyew/src/gen321.bin", 8, 8) {
-        // 16-rih ve 2-ich matrisleri yazdır
-        print_matrix_in_hex(&matrix2);
-        print_matrix_in_binary(&matrix2);
+            // Вывод матриц2 в 16-ричной и 2-ичной системе исчисления
+            let iy=3;
+            // Вывод матриц3 в 16-ричной и 2-ичной системе исчисления
+            print_matrix_in_hex(&matrix3,iy);
+            print_matrix_in_binary(&matrix3,iy);
+
+            // Вывод обработанных матриц в двоичной системе исчисления
+            process_matrices(&transposed_matrix, &matrix2, &matrix3);
+        }
     }
-    klyuch();
 }
+
