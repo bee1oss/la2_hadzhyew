@@ -149,57 +149,149 @@ fn print_matrix_in_binary(matrix: &Vec<Vec<u8>>,iy:usize) {
         matrix.push(row_values);
     }
     print_matrix_in_binary(&matrix, iy);
-}*/
+}*/// Ваша функция для бинарного сложения без обрезки нулей
+fn binary_addition(row1: &str, row2: &str) -> String {
+    let mut carry = 0;
+    let mut result = String::new();
 
+    for (bit1, bit2) in row1.chars().rev().zip(row2.chars().rev()) {
+        let digit1 = bit1.to_digit(2).unwrap();
+        let digit2 = bit2.to_digit(2).unwrap();
+        let sum = digit1 + digit2 + carry;
+        carry = sum / 2;
+        result.push_str(&(sum % 2).to_string());
+    }
+
+    if carry > 0 {
+        result.push_str(&carry.to_string());
+    }
+
+    result.chars().rev().collect()
+}
 // Новая функция, которая принимает три матрицы и выводит их в двоичной системе исчисления
 fn process_matrices(matrix1: &Vec<Vec<u8>>, matrix2: &Vec<Vec<u8>>, matrix3: &Vec<Vec<u8>>) {
-    // Проход по всем трем матрицам
-    for (i, row) in matrix1.iter().enumerate() {
-        // Вывод элемента строки
-        for &element in row {
-          
-        }
-        
-        // Переход на новую строку после каждой строки матрицы1
-     
-    }
+    for i in 0..16
+     {
+        let row1 = matrix1[i]
+            .iter()
+            .map(|&num| format!("{:04b}", num))
+            .collect::<Vec<_>>()
+            .iter()
+            .map(|s| s.as_str()) // Convert String to &str
+            .collect::<Vec<_>>()
+            .join("");
+
+        let row2 = matrix2[i]
+            .iter()
+            .map(|&num| format!("{:04b}", num))
+            .collect::<Vec<_>>()
+            .iter()
+            .map(|s| s.as_str()) // Convert String to &str
+            .collect::<Vec<_>>()
+            .join("");
+
+        let binary_sum = binary_addition(&row1, &row2);
+
+        // Разбиваем двоичную сумму на 8 столбцов
+     // Разбиваем двоичную сумму на 8 столбцов
+// Разбиваем двоичную сумму на 8 столбцов
+    // Разбиваем двоичную сумму на 8 столбцов
+        let columns: Vec<String> = binary_sum
+        .chars()
+        .collect::<Vec<_>>()
+        .chunks(4)
+        .map(|chunk| chunk.iter().collect::<String>())
+        .collect();
+
+        // Convert Vec<String> to Vec<&str>
+// Convert Vec<String> to Vec<&str>, skipping excess elements
+// Convert Vec<String> to Vec<&str> and exclude the first element
+// Convert Vec<String> to Vec<&str> and exclude the first element
+let columns_str: Vec<&str> = columns.iter().skip(1).map(|s| s.as_str()).collect();
+
+// Join the columns into a single string
+let mut binary_sum_str = columns_str.join("");
+
+// If there are more than 32 elements, keep the last 32 elements
+// If there are more than 32 elements, keep the last 32 elements
+if binary_sum_str.len() > 32 {
+    binary_sum_str = binary_sum_str.chars().skip(binary_sum_str.len() - 32).collect();
 }
+
+// If there are less than 32 elements, pad with leading zeros
+while binary_sum_str.len() < 32 {
+    binary_sum_str.insert(0, '0');
+}
+
+// Выводим результат в одной строке с разбиением на 8 столбцов
+print!("Binary Sum (Row {}): [", i + 1);
+
+// Iterate over the characters and print in groups of 4
+for (index, char) in binary_sum_str.chars().enumerate() {
+    if index > 0 && index % 4 == 0 {
+        print!(" ");
+    }
+    print!("{}", char);
+}
+
+println!("]");
+
+
+}}
 
 fn main() {
     let rows = 16;
     let cols = 8;
 let iy=1;
     // Чтение первого файла и создание матрицы
-    if let Some(matrix1) = read_file("D:/git/la2_hadzhyew/src/gen.bin", rows, cols) {
+    if let Some(mut matrix1) = read_file("D:/git/la2_hadzhyew/src/gen.bin", rows, cols) {
         // Вывод матрицы1 в 16-ричной и 2-ичной системе исчисления
-        
-        print_matrix_in_hex(&matrix1,iy);
-        print_matrix_in_binary(&matrix1,iy);
- 
-    // Получаем количество строк и столбцов исходной матрицы
-    let num_rows = matrix1.len();
-    let num_cols = matrix1[0].len();
-    let transposed_matrix: Vec<Vec<u8>> = (0..num_cols)
-        .map(|col_index| {
-            (0..num_rows)
-                .map(|row_index| matrix1[row_index][col_index])
-                .collect()
-        })
-        .collect();
-
-    // Выводим результат
-    for row in transposed_matrix.clone() {
-        for &element in row.iter() {
-            print!("{:04b}", element);
+        print_matrix_in_hex(&matrix1, iy);
+        print_matrix_in_binary(&matrix1, iy);
+    
+        let num_rows = matrix1.len();
+        let num_cols = matrix1[0].len();
+    
+        // Создаем новую матрицу с транспонированными строками исходной матрицы
+        let transposed_matrix: Vec<Vec<u8>> = (0..num_rows)
+            .map(|row_index| vec![matrix1[row_index][0]])
+            .collect();
+    
+        // Выводим результат
+     
+    
+        // Overwrite matrix1 with the transposed_matrix
+        for i in 0..num_rows {
+            matrix1[i][0] = transposed_matrix[i][0];
         }
-        println!();
-    }
-     //..
-        let iy=2;
+    
+        // Выводим обновленную матрицу1
+   let iy=2;
         // Чтение второго файла и создание матрицы
         if let Some(matrix2) = read_file("D:/git/la2_hadzhyew/src/gen321.bin", 8, cols) {
             print_matrix_in_hex(&matrix2,iy);
             print_matrix_in_binary(&matrix2,iy);
+
+            let num_rows = matrix2.len();
+            let num_cols = matrix2[0].len();
+            let trans_matrix: Vec<Vec<u8>> = (0..num_rows)
+            .map(|row_index| {
+                (0..num_cols)
+                    .map(|col_index| {
+                        matrix2[row_index][col_index]
+                    })
+                    .collect()
+            })
+            .collect();
+    
+        // Выводим результат
+        for row in trans_matrix.iter() {
+            let binary_row: String = row.iter().map(|&num| format!("{:04b}", num)).collect();
+            println!("[{}]", binary_row);
+        }
+
+
+
             // Создание третьей матрицы (вызов функции klyuch)
             let values: Vec<&str> = vec![
                 "ED3E868D", "3EF0AB79", "C68B0175", "CEACE980",
@@ -228,7 +320,7 @@ let iy=1;
             print_matrix_in_binary(&matrix3,iy);
 
             // Вывод обработанных матриц в двоичной системе исчисления
-            process_matrices(&transposed_matrix, &matrix2, &matrix3);
+            process_matrices(&matrix1, &trans_matrix, &matrix3);
         }
     }
 }
