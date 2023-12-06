@@ -172,6 +172,7 @@ fn binary_addition(row1: &str, row2: &str) -> String {
 fn process_matrices(matrix1: &Vec<Vec<u8>>, matrix2: &Vec<Vec<u8>>, matrix3: &Vec<Vec<u8>>) {
     for i in 0..16
      {
+        let mut jet=0;
         let row1 = matrix1[i]
             .iter()
             .map(|&num| format!("{:04b}", num))
@@ -180,8 +181,9 @@ fn process_matrices(matrix1: &Vec<Vec<u8>>, matrix2: &Vec<Vec<u8>>, matrix3: &Ve
             .map(|s| s.as_str()) // Convert String to &str
             .collect::<Vec<_>>()
             .join("");
-
-        let row2 = matrix2[i]
+       // for iо in 0..32{
+            
+            let row2 = matrix2[jet]
             .iter()
             .map(|&num| format!("{:04b}", num))
             .collect::<Vec<_>>()
@@ -191,11 +193,12 @@ fn process_matrices(matrix1: &Vec<Vec<u8>>, matrix2: &Vec<Vec<u8>>, matrix3: &Ve
             .join("");
 
         let binary_sum = binary_addition(&row1, &row2);
-
-        // Разбиваем двоичную сумму на 8 столбцов
-     // Разбиваем двоичную сумму на 8 столбцов
-// Разбиваем двоичную сумму на 8 столбцов
-    // Разбиваем двоичную сумму на 8 столбцов
+         
+         /*   jet+=1;
+            if(jet==8){
+            jet=0;}*/ 
+            // Разбиваем двоичную сумму на 8 столбцов
+  
         let columns: Vec<String> = binary_sum
         .chars()
         .collect::<Vec<_>>()
@@ -203,41 +206,39 @@ fn process_matrices(matrix1: &Vec<Vec<u8>>, matrix2: &Vec<Vec<u8>>, matrix3: &Ve
         .map(|chunk| chunk.iter().collect::<String>())
         .collect();
 
-        // Convert Vec<String> to Vec<&str>
-// Convert Vec<String> to Vec<&str>, skipping excess elements
-// Convert Vec<String> to Vec<&str> and exclude the first element
-// Convert Vec<String> to Vec<&str> and exclude the first element
-let columns_str: Vec<&str> = columns.iter().skip(1).map(|s| s.as_str()).collect();
+       // Convert Vec<String> to Vec<&str>, skipping excess elements
 
-// Join the columns into a single string
-let mut binary_sum_str = columns_str.join("");
+        let columns_str: Vec<&str> = columns.iter().skip(1).map(|s| s.as_str()).collect();
 
-// If there are more than 32 elements, keep the last 32 elements
-// If there are more than 32 elements, keep the last 32 elements
-if binary_sum_str.len() > 32 {
-    binary_sum_str = binary_sum_str.chars().skip(binary_sum_str.len() - 32).collect();
-}
+        // Join the columns into a single string
+        let mut binary_sum_str = columns_str.join("");
 
-// If there are less than 32 elements, pad with leading zeros
-while binary_sum_str.len() < 32 {
-    binary_sum_str.insert(0, '0');
-}
+        // If there are more than 32 elements, keep the last 32 elements
+        // If there are more than 32 elements, keep the last 32 elements
+        if binary_sum_str.len() > 32 {
+            binary_sum_str = binary_sum_str.chars().skip(binary_sum_str.len() - 32).collect();
+        }
 
-// Выводим результат в одной строке с разбиением на 8 столбцов
-print!("Binary Sum (Row {}): [", i + 1);
+        // If there are less than 32 elements, pad with leading zeros
+        while binary_sum_str.len() < 32 {
+            binary_sum_str.insert(0, '0');
+        }
 
-// Iterate over the characters and print in groups of 4
-for (index, char) in binary_sum_str.chars().enumerate() {
-    if index > 0 && index % 4 == 0 {
-        print!(" ");
-    }
-    print!("{}", char);
-}
+        // Выводим результат в одной строке с разбиением на 8 столбцов
+        print!("Binary Sum (Row {}): [", i + 1);
 
-println!("]");
+        // Iterate over the characters and print in groups of 4
+        for (index, char) in binary_sum_str.chars().enumerate() {
+            if index > 0 && index % 4 == 0 {
+                print!(" ");
+            }
+            print!("{}", char);
+        }
 
+        println!("]");
 
-}}
+                }}
+//}
 
 fn main() {
     let rows = 16;
@@ -325,3 +326,85 @@ let iy=1;
     }
 }
 
+/* для блока шифра
+fn binary_to_decimal(binary_str: &str) -> usize {
+    usize::from_str_radix(binary_str, 2).unwrap()
+}
+
+fn create_result_matrix<'a>(matrix1: Vec<Vec<&'a str>>, matrix2: Vec<Vec<&'a str>>) -> Vec<Vec<&'a str>> {
+    let mut result_matrix = vec![vec![""; matrix1[0].len()]; matrix1.len()];
+
+    for (i, row) in matrix1.iter().enumerate() {
+        for (j, &element) in row.iter().enumerate() {
+            let decimal_value = binary_to_decimal(element);
+
+            // Используем десятичное значение как индекс для выбора строки из второй матрицы
+            let selected_row = &matrix2[decimal_value];
+
+            // Записываем значение в результирующую матрицу
+            result_matrix[i][j] = selected_row[j];
+        }
+    }
+
+    result_matrix
+}
+
+fn main() {
+    let matrix1: Vec<Vec<&str>> = vec![
+        vec!["1010", "1101", "1111"],
+        vec!["0101", "0010", "1000"],
+        vec!["1110", "0110", "0011"],
+    ];
+
+    // Предположим, что matrix2 имеет 16 строк и тот же размер столбцов, что и matrix1
+    let matrix2: Vec<Vec<&str>> = vec![
+        vec![" 1110", " 1101", " 0011 "], 
+        vec![" 0011", " 1110", " 1111 "],
+        vec![" 1100", " 0110", " 1000 "],
+        vec![" 1100", " 1110", " 1010 "],
+        vec![" 1110", " 0010", " 1100 "],
+        vec![" 0010", " 0111", " 0111 "],
+        vec![" 1111", " 1001", " 1001 "],
+        vec![" 1001", " 1101", " 1100 "],
+        vec![" 0011", " 1001", " 1011 "],
+        vec![" 1000", " 1010", " 1111 "],
+        vec![" 1101", " 0010", " 0011 "], 
+        vec![" 1110", " 0100", " 1100 "],
+        vec![" 0011", " 1000", " 0111 "],
+        vec![" 0110", " 1101", " 0100 "],
+        vec![" 1111", " 1011", " 0111 "],
+        vec![" 0111", " 1110", " 0100 "],
+
+
+
+
+        // Здесь нужно предоставить значения для 16 строк второй матрицы
+        // ...
+    ];
+
+    let result_matrix = create_result_matrix(matrix1, matrix2);
+
+    // Вывод результата
+    for row in result_matrix.iter() {
+        for &element in row.iter() {
+            print!("{} ", element);
+        }
+        println!();
+    }
+}
+//сдвиг влево
+fn main() {
+    let binary_str = "10101101111";
+
+    let shifted_binary_str = shift_left(binary_str, 6);// 6 отвечает сколько будет сохранено чисел то есть 6 не тронут а все остальные переместяться
+
+    println!("Исходное число: {}", binary_str);
+    println!("После сдвига на 5 позиций влево: {}", shifted_binary_str);
+}
+
+fn shift_left(binary_str: &str, shift_amount: usize) -> String {
+    let shifted_str = format!("{1}{0}", &binary_str[0..binary_str.len() - shift_amount], &binary_str[binary_str.len() - shift_amount..]);
+    shifted_str
+}
+
+*/
