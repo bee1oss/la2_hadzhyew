@@ -240,12 +240,13 @@ fn process_matrices(matrix1: &Vec<Vec<u8>>, matrix2: &Vec<Vec<u8>>, matrix3: &Ve
                 }}
 //}
 
+
 fn main() {
     let rows = 16;
     let cols = 8;
 let iy=1;
     // Чтение первого файла и создание матрицы
-    if let Some(mut matrix1) = read_file("D:/git/la2_hadzhyew/src/gen.bin", rows, cols) {
+    if let Some(mut matrix1) = read_file("C:/Users/begah/OneDrive/Masaüstü/rust_project/la2_hadzhyew/src/gen2.bin", rows, cols) {
         // Вывод матрицы1 в 16-ричной и 2-ичной системе исчисления
         print_matrix_in_hex(&matrix1, iy);
         print_matrix_in_binary(&matrix1, iy);
@@ -269,7 +270,7 @@ let iy=1;
         // Выводим обновленную матрицу1
    let iy=2;
         // Чтение второго файла и создание матрицы
-        if let Some(matrix2) = read_file("D:/git/la2_hadzhyew/src/gen321.bin", 8, cols) {
+        if let Some(matrix2) = read_file("C:/Users/begah/OneDrive/Masaüstü/rust_project/la2_hadzhyew/src/gen321.bin", 8, cols) {
             print_matrix_in_hex(&matrix2,iy);
             print_matrix_in_binary(&matrix2,iy);
 
@@ -295,10 +296,10 @@ let iy=1;
 
             // Создание третьей матрицы (вызов функции klyuch)
             let values: Vec<&str> = vec![
-                "ED3E868D", "3EF0AB79", "C68B0175", "CEACE980",
-                "E2CF119F", "277D712A", "F99E33A7", "9DCA77FA",
-                "39B9F8F4", "8AFF1045", "D23BBE59", "E4CF5748",
-                "3878AAEB", "6D4E2812", "FB7D36A8", "7E43433E"
+                "D868E3DE", "97BA0FE3", "5710B86C", "089E7AEC",
+                "F911FC2E", "A217D772", "7A33E99F", "AF77ACD9",
+                "4F8F9B93", "5401FFA8", "95EBB32D", "8475FC4E",
+                "BEAA8783", "2182E4D6", "2A53D7BF", "E33434E7"
             ];
             let rows = values.len();
             let cols = values[0].len() / 2;
